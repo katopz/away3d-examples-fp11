@@ -52,9 +52,12 @@ package
 		//[Embed(source="/../embeds/collada/proto_fullbody_LOD.dae",mimeType="application/octet-stream")]
 		//[Embed(source="/../collada/proto_fullbody_LOD_combined.dae",mimeType="application/octet-stream")]
 		//[Embed(source="/../embeds/collada/box_rigid_combine.dae",mimeType="application/octet-stream")]
-		[Embed(source="/../assets/box_ani.dae",mimeType="application/octet-stream")]
+		//[Embed(source="/../assets/box_ani.dae",mimeType="application/octet-stream")]
 		//[Embed(source="/../assets/box_one_ani.dae",mimeType="application/octet-stream")]
 		//[Embed(source="/../assets/model_1.dae",mimeType="application/octet-stream")]
+		//[Embed(source="../assets/box2_rigid_ani.dae",mimeType="application/octet-stream")]
+		//[Embed(source="/../assets/astroboy_maya_fixed.dae",mimeType="application/octet-stream")]
+		[Embed(source="/../assets/box3_leg.dae",mimeType="application/octet-stream")]
 		public static var _dae_clazz:Class;
 
 		// tableTexture
@@ -293,11 +296,19 @@ package
 
 				case AssetType.ANIMATION_NODE:
 				{
+					/*
 					var node:SkeletonClipNode = event.asset as SkeletonClipNode;
 					node.name = event.asset.assetNamespace;
 
 					if (_animationSet)
 						_animationSet.addAnimation(node);
+					*/
+					/*
+					var node:SkeletonClipNode = event.asset as SkeletonClipNode;
+					var name:String = event.asset.assetNamespace;
+					node.name = name;
+					_animationSet.addAnimation(node);
+					*/
 
 					break;
 				}
@@ -305,13 +316,11 @@ package
 				case AssetType.ANIMATION_SET:
 				{
 					_animationSet = event.asset as SkeletonAnimationSet;
-					_animator = new SkeletonAnimator(_animationSet, _skeleton);
-
+					
+					if(!_animator)
+						_animator = new SkeletonAnimator(_animationSet, _skeleton);
+					
 					_mesh.animator = _animator;
-					
-					_animator.play("node_0");
-					_animator.playbackSpeed = 1;
-					
 					
 					//_animator.globalPose.jointPoses = SkeletonClipNode(_animationSet.animations[0]).frames[0].jointPoses;
 
@@ -339,10 +348,16 @@ package
 		 */
 		private function complete(event:LoaderEvent):void
 		{
+			trace(" ! Complete -------------------------------------");
+			
 			AssetLibrary.removeEventListener(AssetEvent.ASSET_COMPLETE, loaded);
 			event.target.removeEventListener(LoaderEvent.RESOURCE_COMPLETE, complete);
 
 			scene.addChild(char);
+			
+			_animator.play("node_0");
+			//_animator.play("node_1");
+			_animator.playbackSpeed = 1;
 		}
 
 		/**

@@ -14,8 +14,8 @@ exportTexTangents=0;exportConstraints=0;exportPhysics=0;exportXRefs=1;
 dereferenceXRefs=0;cameraXFov=0;cameraYFov=1</comments>
       <source_data>file:///D:/fork/away3dlite-examples-fp10/assets/dae/box_ani.mb</source_data>
     </contributor>
-    <created>2012-11-18T13:38:43Z</created>
-    <modified>2012-11-18T13:38:43Z</modified>
+    <created>2012-11-24T07:59:48Z</created>
+    <modified>2012-11-24T07:59:48Z</modified>
     <unit meter="0.01" name="centimeter"/>
     <up_axis>Y_UP</up_axis>
   </asset>
@@ -55,6 +55,42 @@ dereferenceXRefs=0;cameraXFov=0;cameraYFov=1</comments>
         <input semantic="INTERPOLATION" source="#joint1.matrix_joint1_transform-interpolations"/>
       </sampler>
       <channel source="#joint1.matrix_joint1_transform-sampler" target="joint1/transform"/>
+    </animation>
+    <animation id="joint2.matrix">
+      <source id="joint2.matrix_joint2_transform-input">
+        <float_array id="joint2.matrix_joint2_transform-input-array" count="24">0.041666 0.083333 0.125 0.166667 0.208333 0.25 0.291667 0.333333 0.375 0.416667 0.458333 0.5 0.541667 0.583333 0.625 0.666667 0.708333 0.75 0.791667 0.833333 0.875 0.916667 0.958333 1</float_array>
+        <technique_common>
+          <accessor source="#joint2.matrix_joint2_transform-input-array" count="24" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+        <technique profile="MAYA">
+          <pre_infinity>CONSTANT</pre_infinity>
+          <post_infinity>CONSTANT</post_infinity>
+        </technique>
+      </source>
+      <source id="joint2.matrix_joint2_transform-output">
+        <float_array id="joint2.matrix_joint2_transform-output-array" count="384">1 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.043478 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.086956 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.130435 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.173913 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.217391 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.26087 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.304348 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.347826 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.391304 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.434783 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.478261 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.521739 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.565217 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.608696 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.652174 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.695652 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.73913 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.782609 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.826087 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.869565 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.913043 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 0.956522 0 1 0 1 0 0 1 0 0 0 0 1 1 0 0 1 0 1 0 1 0 0 1 0 0 0 0 1</float_array>
+        <technique_common>
+          <accessor source="#joint2.matrix_joint2_transform-output-array" count="24" stride="16">
+            <param name="TRANSFORM" type="float4x4"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="joint2.matrix_joint2_transform-interpolations">
+        <Name_array id="joint2.matrix_joint2_transform-interpolations-array" count="24">LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR LINEAR</Name_array>
+        <technique_common>
+          <accessor source="#joint2.matrix_joint2_transform-interpolations-array" count="24" stride="1">
+            <param name="INTERPOLATION" type="Name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="joint2.matrix_joint2_transform-sampler">
+        <input semantic="INPUT" source="#joint2.matrix_joint2_transform-input"/>
+        <input semantic="OUTPUT" source="#joint2.matrix_joint2_transform-output"/>
+        <input semantic="INTERPOLATION" source="#joint2.matrix_joint2_transform-interpolations"/>
+      </sampler>
+      <channel source="#joint2.matrix_joint2_transform-sampler" target="joint2/transform"/>
     </animation>
   </library_animations>
   <library_images>
@@ -352,9 +388,9 @@ dereferenceXRefs=0;cameraXFov=0;cameraYFov=1</comments>
         </instance_controller>
       </node>
       <node id="joint1" name="joint1" sid="bone0" type="JOINT">
-        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 0.434783 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
         <node id="joint2" name="joint2" sid="bone1" type="JOINT">
-          <matrix sid="transform">1 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1</matrix>
+          <matrix sid="transform">1 0 0 0.434783 0 1 0 1 0 0 1 0 0 0 0 1</matrix>
           <extra>
             <technique profile="MAYA">
               <segment_scale_compensate>1</segment_scale_compensate>
