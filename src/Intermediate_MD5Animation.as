@@ -68,88 +68,88 @@ package
 	import flash.text.*;
 	import flash.ui.*;
 
-	[SWF(backgroundColor="#000000", frameRate="30")]
+	[SWF(backgroundColor = "#000000", frameRate = "30")]
 
 	public class Intermediate_MD5Animation extends Sprite
 	{
 		//signature swf
-		[Embed(source="/../embeds/signature.swf", symbol="Signature")]
+		[Embed(source = "/../embeds/signature.swf", symbol = "Signature")]
 		public var SignatureSwf:Class;
 
 		//floor diffuse map
-		[Embed(source="/../embeds/rockbase_diffuse.jpg")]
+		[Embed(source = "/../embeds/rockbase_diffuse.jpg")]
 		private var FloorDiffuse:Class;
 
 		//floor normal map
-		[Embed(source="/../embeds/rockbase_normals.png")]
+		[Embed(source = "/../embeds/rockbase_normals.png")]
 		private var FloorNormals:Class;
 
 		//floor specular map
-		[Embed(source="/../embeds/rockbase_specular.png")]
+		[Embed(source = "/../embeds/rockbase_specular.png")]
 		private var FloorSpecular:Class;
 
 		//body diffuse map
-		[Embed(source="/../embeds/hellknight/hellknight_diffuse.jpg")]
+		[Embed(source = "/../embeds/hellknight/hellknight_diffuse.jpg")]
 		private var BodyDiffuse:Class;
 
 		//body normal map
-		[Embed(source="/../embeds/hellknight/hellknight_normals.png")]
+		[Embed(source = "/../embeds/hellknight/hellknight_normals.png")]
 		private var BodyNormals:Class;
 
 		//bidy specular map
-		[Embed(source="/../embeds/hellknight/hellknight_specular.png")]
+		[Embed(source = "/../embeds/hellknight/hellknight_specular.png")]
 		private var BodySpecular:Class;
 
 		//skybox
-		[Embed(source="/../embeds/skybox/grimnight_posX.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_posX.png")]
 		private var EnvPosX:Class;
-		[Embed(source="/../embeds/skybox/grimnight_posY.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_posY.png")]
 		private var EnvPosY:Class;
-		[Embed(source="/../embeds/skybox/grimnight_posZ.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_posZ.png")]
 		private var EnvPosZ:Class;
-		[Embed(source="/../embeds/skybox/grimnight_negX.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_negX.png")]
 		private var EnvNegX:Class;
-		[Embed(source="/../embeds/skybox/grimnight_negY.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_negY.png")]
 		private var EnvNegY:Class;
-		[Embed(source="/../embeds/skybox/grimnight_negZ.png")]
+		[Embed(source = "/../embeds/skybox/grimnight_negZ.png")]
 		private var EnvNegZ:Class;
 
 		//billboard texture for red light
-		[Embed(source="/../embeds/redlight.png")]
+		[Embed(source = "/../embeds/redlight.png")]
 		private var RedLight:Class;
 
 		//billboard texture for blue light
-		[Embed(source="/../embeds/bluelight.png")]
+		[Embed(source = "/../embeds/bluelight.png")]
 		private var BlueLight:Class;
 
 		//hellknight mesh
-		[Embed(source="/../embeds/hellknight/hellknight.md5mesh", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/hellknight.md5mesh", mimeType = "application/octet-stream")]
 		private var HellKnight_Mesh:Class;
 
 		//hellknight animations
-		[Embed(source="/../embeds/hellknight/idle2.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/idle2.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Idle2:Class;
-		[Embed(source="/../embeds/hellknight/walk7.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/walk7.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Walk7:Class;
-		[Embed(source="/../embeds/hellknight/attack3.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/attack3.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Attack3:Class;
-		[Embed(source="/../embeds/hellknight/turret_attack.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/turret_attack.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_TurretAttack:Class;
-		[Embed(source="/../embeds/hellknight/attack2.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/attack2.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Attack2:Class;
-		[Embed(source="/../embeds/hellknight/chest.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/chest.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Chest:Class;
-		[Embed(source="/../embeds/hellknight/roar1.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/roar1.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Roar1:Class;
-		[Embed(source="/../embeds/hellknight/leftslash.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/leftslash.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_LeftSlash:Class;
-		[Embed(source="/../embeds/hellknight/headpain.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/headpain.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_HeadPain:Class;
-		[Embed(source="/../embeds/hellknight/pain1.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/pain1.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_Pain1:Class;
-		[Embed(source="/../embeds/hellknight/pain_luparm.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/pain_luparm.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_PainLUPArm:Class;
-		[Embed(source="/../embeds/hellknight/range_attack2.md5anim", mimeType="application/octet-stream")]
+		[Embed(source = "/../embeds/hellknight/range_attack2.md5anim", mimeType = "application/octet-stream")]
 		private var HellKnight_RangeAttack2:Class;
 
 		//engine variables
@@ -321,7 +321,7 @@ package
 			shadowMapMethod.epsilon = .0007;
 
 			//create a global fog method
-			fogMethod = new FogMethod(0, camera.lens.far*0.5, 0x000000);
+			fogMethod = new FogMethod(0, camera.lens.far * 0.5, 0x000000);
 		}
 
 		/**
@@ -420,12 +420,12 @@ package
 
 			count += 0.01;
 
-			redLight.x = Math.sin(count)*1500;
-			redLight.y = 250 + Math.sin(count*0.54)*200;
-			redLight.z = Math.cos(count*0.7)*1500;
-			blueLight.x = -Math.sin(count*0.8)*1500;
-			blueLight.y = 250 - Math.sin(count*.65)*200;
-			blueLight.z = -Math.cos(count*0.9)*1500;
+			redLight.x = Math.sin(count) * 1500;
+			redLight.y = 250 + Math.sin(count * 0.54) * 200;
+			redLight.z = Math.cos(count * 0.7) * 1500;
+			blueLight.x = -Math.sin(count * 0.8) * 1500;
+			blueLight.y = 250 - Math.sin(count * .65) * 200;
+			blueLight.z = -Math.cos(count * 0.9) * 1500;
 
 			view.render();
 		}
@@ -435,32 +435,42 @@ package
 		 */
 		private function onAssetComplete(event:AssetEvent):void
 		{
-			if (event.asset.assetType == AssetType.ANIMATION_NODE) {
+			if (event.asset.assetType == AssetType.ANIMATION_NODE)
+			{
 
 				var node:SkeletonClipNode = event.asset as SkeletonClipNode;
 				var name:String = event.asset.assetNamespace;
 				node.name = name;
 				animationSet.addAnimation(node);
-				
-				if (name == IDLE_NAME || name == WALK_NAME) {
+
+				if (name == IDLE_NAME || name == WALK_NAME)
+				{
 					node.looping = true;
-				} else {
+				}
+				else
+				{
 					node.looping = false;
 					node.addEventListener(AnimationStateEvent.PLAYBACK_COMPLETE, onPlaybackComplete);
 				}
 
 				if (name == IDLE_NAME)
 					stop();
-			} else if (event.asset.assetType == AssetType.ANIMATION_SET) {
+			}
+			else if (event.asset.assetType == AssetType.ANIMATION_SET)
+			{
 				animationSet = event.asset as SkeletonAnimationSet;
 				animator = new SkeletonAnimator(animationSet, skeleton);
 				for (var i:uint = 0; i < ANIM_NAMES.length; ++i)
 					AssetLibrary.loadData(new ANIM_CLASSES[i](), null, ANIM_NAMES[i], new MD5AnimParser());
 
 				mesh.animator = animator;
-			} else if (event.asset.assetType == AssetType.SKELETON) {
+			}
+			else if (event.asset.assetType == AssetType.SKELETON)
+			{
 				skeleton = event.asset as Skeleton;
-			} else if (event.asset.assetType == AssetType.MESH) {
+			}
+			else if (event.asset.assetType == AssetType.MESH)
+			{
 				//grab mesh object and assign our material object
 				mesh = event.asset as Mesh;
 				mesh.material = bodyMaterial;
@@ -480,11 +490,11 @@ package
 		{
 			if (animator.activeState != event.animationState)
 				return;
-			
+
 			onceAnim = null;
-			
+
 			animator.play(currentAnim, stateTransition);
-			animator.playbackSpeed = isMoving? movementDirection*(isRunning? RUN_SPEED : WALK_SPEED) : IDLE_SPEED;
+			animator.playbackSpeed = isMoving ? movementDirection * (isRunning ? RUN_SPEED : WALK_SPEED) : IDLE_SPEED;
 		}
 
 		private function playAction(val:uint):void
@@ -500,7 +510,8 @@ package
 		 */
 		private function onKeyDown(event:KeyboardEvent):void
 		{
-			switch (event.keyCode) {
+			switch (event.keyCode)
+			{
 				case Keyboard.SHIFT:
 					isRunning = true;
 					if (isMoving)
@@ -554,7 +565,8 @@ package
 
 		private function onKeyUp(event:KeyboardEvent):void
 		{
-			switch (event.keyCode) {
+			switch (event.keyCode)
+			{
 				case Keyboard.SHIFT:
 					isRunning = false;
 					if (isMoving)
@@ -578,7 +590,7 @@ package
 		private function updateMovement(dir:Number):void
 		{
 			isMoving = true;
-			animator.playbackSpeed = dir*(isRunning? RUN_SPEED : WALK_SPEED);
+			animator.playbackSpeed = dir * (isRunning ? RUN_SPEED : WALK_SPEED);
 
 			if (currentAnim == WALK_NAME)
 				return;

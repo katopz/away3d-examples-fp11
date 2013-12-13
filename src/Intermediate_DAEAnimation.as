@@ -9,12 +9,10 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
-	
+
 	import away3d.animators.SkeletonAnimationSet;
 	import away3d.animators.SkeletonAnimator;
-	import away3d.animators.data.JointPose;
 	import away3d.animators.data.Skeleton;
-	import away3d.animators.nodes.SkeletonClipNode;
 	import away3d.cameras.Camera3D;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.Scene3D;
@@ -22,6 +20,7 @@ package
 	import away3d.controllers.HoverController;
 	import away3d.core.pick.PickingType;
 	import away3d.debug.AwayStats;
+	import away3d.debug.Debug;
 	import away3d.entities.Mesh;
 	import away3d.entities.SegmentSet;
 	import away3d.events.AssetEvent;
@@ -39,34 +38,20 @@ package
 	import away3d.primitives.WireframeSphere;
 	import away3d.utils.Cast;
 
-	[SWF(backgroundColor = "#000000", width = "600", height = "400", frameRate = "60")]
-	public class Basic_LoadDAE_Animation extends Sprite
+	[SWF(backgroundColor = "#000000", width = "600", height = "400", frameRate = "30")]
+	public class Intermediate_DAEAnimation extends Sprite
 	{
-		//[Embed(source = "/../embeds/collada/a_box_smooth_translate.dae", mimeType = "application/octet-stream")]
-		//[Embed(source = "/../embeds/collada/c_astroboy_maya.dae", mimeType = "application/octet-stream")]
-		//[Embed(source = "/../embeds/collada/b_mario_testrun.dae", mimeType = "application/octet-stream")]
-		//[Embed(source="/../embeds/collada/box_smooth_combine.dae",mimeType="application/octet-stream")]//working, transform bug
-		//[Embed(source="/../embeds/collada/char_head_combine.dae",mimeType="application/octet-stream")]
-		
-		//[Embed(source="/../embeds/collada/box_rigid.dae",mimeType="application/octet-stream")] // to mesh will fail
-		//[Embed(source="/../embeds/collada/proto_fullbody_LOD.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../collada/proto_fullbody_LOD_combined.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../embeds/collada/box_rigid_combine.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../assets/box_ani.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../assets/box_one_ani.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../assets/model_1.dae",mimeType="application/octet-stream")]
-		//[Embed(source="../assets/box2_rigid_ani.dae",mimeType="application/octet-stream")]
-		//[Embed(source="/../assets/astroboy_maya_fixed.dae",mimeType="application/octet-stream")]
-		[Embed(source="/../assets/box3_leg.dae",mimeType="application/octet-stream")]
+		//signature swf
+		[Embed(source = "/../embeds/signature.swf", symbol = "Signature")]
+		public var SignatureSwf:Class;
+
+		// astro boy
+		[Embed(source = "/../embeds/astroboy_maya_fixed.dae", mimeType = "application/octet-stream")]
 		public static var _dae_clazz:Class;
 
 		// tableTexture
 		[Embed(source = "/../embeds/floor_diffuse.jpg")]
 		private var tableTex:Class;
-
-		//signature swf
-		[Embed(source = "/../embeds/signature.swf", symbol = "Signature")]
-		public var SignatureSwf:Class;
 
 		//engine variables
 		private var scene:Scene3D;
@@ -77,13 +62,15 @@ package
 
 		//signature variables
 		private var Signature:Sprite;
-		private var _signature:Bitmap;
 		private var SignatureBitmap:Bitmap;
 
 		//light objects
 		private var light:DirectionalLight;
 		private var lightPicker:StaticLightPicker;
 		private var direction:Vector3D;
+
+		//material objects
+		private var groundMaterial:TextureMaterial;
 
 		//navigation variables
 		private var move:Boolean = false;
@@ -98,13 +85,12 @@ package
 		private var panIncrement:Number = 0;
 		private var distanceIncrement:Number = 0;
 
-		private var char:ObjectContainer3D;
-
 		//animation variables
 		private var _mesh:Mesh;
 		private var _animator:SkeletonAnimator;
 		private var _animationSet:SkeletonAnimationSet;
 		private var _skeleton:Skeleton;
+		private var _daeHolder:ObjectContainer3D;
 
 		//debug variables
 		private var _debugSegmentSets:Vector.<SegmentSet> = new Vector.<SegmentSet>;
@@ -114,7 +100,7 @@ package
 		/**
 		 * Constructor
 		 */
-		public function Basic_LoadDAE_Animation()
+		public function Intermediate_DAEAnimation()
 		{
 			init();
 		}
@@ -126,32 +112,9 @@ package
 		{
 			initEngine();
 			initLights();
+			initMaterials();
+			initObjects();
 			initListeners();
-
-			initialize();
-		}
-
-		private function initialize():void
-		{
-			// create ground mesh
-			var matground:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(tableTex));
-			matground.shadowMethod = new FilteredShadowMapMethod(light);
-			matground.lightPicker = lightPicker;
-			matground.ambient = 0.5;
-			matground.specular = 0.5;
-			var mesh:Mesh = new Mesh(new PlaneGeometry(5000, 5000), matground);
-			mesh.mouseEnabled = true;
-			view.scene.addChild(mesh);
-			
-			//debug purpose
-			//Debug.active = true;
-
-			//Parsers.enableAllBundled();
-			var context:AssetLoaderContext = new AssetLoaderContext();
-			AssetLibrary.addEventListener(AssetEvent.ASSET_COMPLETE, loaded, false, 0, true);
-			var loader:Loader3D = new Loader3D();
-			loader.addEventListener(LoaderEvent.RESOURCE_COMPLETE, complete, false, 0, true);
-			loader.loadData(new _dae_clazz(), context, null, new DAEParser());
 		}
 
 		/**
@@ -167,7 +130,7 @@ package
 			scene = view.scene;
 			camera = view.camera;
 			//setup controller to be used on the camera
-			cameraController = new HoverController(camera, null, 45, 20, 500, -90);
+			cameraController = new HoverController(camera, null, 45, 20, 700, -90);
 
 			// Chose global picking method ( chose one ).
 			view.mousePicker = PickingType.RAYCAST_BEST_HIT; // Uses the CPU, guarantees accuracy with a little performance cost.
@@ -201,6 +164,39 @@ package
 		}
 
 		/**
+		 * Initialise the materials
+		 */
+		private function initMaterials():void
+		{
+			// create ground mesh
+			groundMaterial = new TextureMaterial(Cast.bitmapTexture(tableTex));
+			groundMaterial.shadowMethod = new FilteredShadowMapMethod(light);
+			groundMaterial.lightPicker = lightPicker;
+			groundMaterial.ambient = 0.5;
+			groundMaterial.specular = 0.5;
+		}
+
+		/**
+		 * Initialise the scene objects
+		 */
+		private function initObjects():void
+		{
+			var mesh:Mesh = new Mesh(new PlaneGeometry(5000, 5000), groundMaterial);
+			mesh.mouseEnabled = true;
+			view.scene.addChild(mesh);
+
+			//debug purpose
+			//Debug.active = true;
+
+			// load DAE
+			var context:AssetLoaderContext = new AssetLoaderContext();
+			AssetLibrary.addEventListener(AssetEvent.ASSET_COMPLETE, loaded, false, 0, true);
+			var loader:Loader3D = new Loader3D();
+			loader.addEventListener(LoaderEvent.RESOURCE_COMPLETE, complete, false, 0, true);
+			loader.loadData(new _dae_clazz(), context, null, new DAEParser());
+		}
+
+		/**
 		 * Initialise the listeners
 		 */
 		private function initListeners():void
@@ -228,22 +224,13 @@ package
 				cameraController.distance += distanceIncrement;
 			}
 
-			
+
 			var _debugSegmentSet:SegmentSet;
 			for (var i:int = 0; i < _debugSegmentSets.length; i++)
 			{
 				_debugSegmentSet = _debugSegmentSets[i];
 				_debugSegmentSet.transform = _animator.globalPose.jointPoses[i].toMatrix3D();
-				//Mesh(char.getChildAt(0).getChildAt(0).getChildAt(0)).subMeshes
 			}
-			
-			/*
-			if(_debugSegmentSets.length > 0)
-				_mesh.transform = _debugSegmentSets[1].transform;
-			*/
-			
-			//if(_animator)
-			//	_animator.update(_time++);
 
 			// Render 3D.
 			view.render();
@@ -270,19 +257,19 @@ package
 			{
 				case AssetType.CONTAINER:
 				{
-					char = ObjectContainer3D(event.asset);
-					char.scale(50);
-					//char.y = 200;
+					_daeHolder = ObjectContainer3D(event.asset);
+					_daeHolder.scale(20);
+					_daeHolder.y = 132;
 					break;
 				}
 
 				case AssetType.MATERIAL:
 				{
 					var material:TextureMaterial = event.asset as TextureMaterial;
-					
-					if(!material)
+
+					if (!material)
 						break;
-						
+
 					material.lightPicker = lightPicker;
 					material.ambient = 1;
 					break;
@@ -294,35 +281,14 @@ package
 					break;
 				}
 
-				case AssetType.ANIMATION_NODE:
-				{
-					/*
-					var node:SkeletonClipNode = event.asset as SkeletonClipNode;
-					node.name = event.asset.assetNamespace;
-
-					if (_animationSet)
-						_animationSet.addAnimation(node);
-					*/
-					/*
-					var node:SkeletonClipNode = event.asset as SkeletonClipNode;
-					var name:String = event.asset.assetNamespace;
-					node.name = name;
-					_animationSet.addAnimation(node);
-					*/
-
-					break;
-				}
-
 				case AssetType.ANIMATION_SET:
 				{
 					_animationSet = event.asset as SkeletonAnimationSet;
-					
-					if(!_animator)
+
+					if (!_animator)
 						_animator = new SkeletonAnimator(_animationSet, _skeleton);
-					
+
 					_mesh.animator = _animator;
-					
-					//_animator.globalPose.jointPoses = SkeletonClipNode(_animationSet.animations[0]).frames[0].jointPoses;
 
 					break;
 				}
@@ -330,8 +296,6 @@ package
 				case AssetType.MESH:
 				{
 					_mesh = event.asset as Mesh;
-					trace("_mesh:" + _mesh);
-					
 					break;
 				}
 
@@ -348,15 +312,14 @@ package
 		 */
 		private function complete(event:LoaderEvent):void
 		{
-			trace(" ! Complete -------------------------------------");
-			
+			Debug.active = false;
+
 			AssetLibrary.removeEventListener(AssetEvent.ASSET_COMPLETE, loaded);
 			event.target.removeEventListener(LoaderEvent.RESOURCE_COMPLETE, complete);
 
-			scene.addChild(char);
-			
+			scene.addChild(_daeHolder);
+
 			_animator.play("node_0");
-			//_animator.play("node_1");
 			_animator.playbackSpeed = 1;
 		}
 
@@ -379,7 +342,8 @@ package
 			lastMouseX = stage.mouseX;
 			lastMouseY = stage.mouseY;
 
-			debugJoint();
+			// for testing purpose
+			//debugJoint();
 		}
 
 		//--------------------------------------------------------------------- DEBUG
@@ -391,24 +355,17 @@ package
 		{
 			var _debugSegmentSet:SegmentSet;
 
-			if(!_animator)
+			if (!_animator)
 				return;
 
-			//_animator.globalPose.jointPoses[int(Math.random()*_animator.globalPose.jointPoses.length)].translation.x+=1;
-			//SkeletonClipNode(_animationSet.animations[0]).frames[0].jointPoses[int(Math.random()*_animator.globalPose.jointPoses.length)].orientation.y+=.2;
-			var num:int = int(Math.random()*_animator.globalPose.jointPoses.length);
-			
-			//SkeletonClipNode(_animationSet.animations[0]).frames[0].jointPoses[num].orientation.y+=.2;
-			//trace("JOINT NAME: " + JointPose(SkeletonClipNode(_animationSet.animations[0]).frames[0].jointPoses[num]).name);
-			//_animator.globalPose.jointPoses[0].translation.x+=1;
-			
+			var num:int = int(Math.random() * _animator.globalPose.jointPoses.length);
+
 			if (_debugSegmentSets.length > 0)
 				return;
-				
+
 			for (var i:int = 0; i < _animator.globalPose.jointPoses.length; i++)
 			{
-				_debugSegmentSet = new WireframeSphere(2, 4, 3);
-				//_debugSegmentSets.push(_debugSegmentSet);
+				_debugSegmentSet = new WireframeSphere(2, 4, 3, 0x336633, .25);
 				_debugSegmentSets.push(_mesh.addChild(_debugSegmentSet));
 			}
 		}
